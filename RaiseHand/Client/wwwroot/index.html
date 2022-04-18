@@ -8,11 +8,19 @@
     <base href="/" />
     <link href="css/bootstrap/bootstrap.min.css" rel="stylesheet" />
     <link href="css/app.css" rel="stylesheet" />
+    <link href="css/preloader.css" rel="stylesheet" />
     <link href="RaiseHand.Client.styles.css" rel="stylesheet" />
 </head>
 
-<body>
-    <div id="app">Loading...</div>
+<body class="d-flex justify-content-center vh-100" style="background-color:yellow;">
+    <div id="app">
+        <div class="loading">
+            <div class="dash uno"></div>
+            <div class="dash dos"></div>
+            <div class="dash tres"></div>
+            <div class="dash cuatro"></div>
+        </div>
+    </div>
 
     <div id="blazor-error-ui">
         An unhandled error has occurred.

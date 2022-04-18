@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.1.32328.378
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RaiseHand.Server", "RaiseHand\Server\RaiseHand.Server.csproj", "{A54BEDFE-90F1-4260-ACED-5ECDEB136619}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RaiseHand.Server", "RaiseHand\Server\RaiseHand.Server.csproj", "{A54BEDFE-90F1-4260-ACED-5ECDEB136619}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RaiseHand.Client", "RaiseHand\Client\RaiseHand.Client.csproj", "{DA9870E0-1337-4669-9135-FB70C85534EC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RaiseHand.Client", "RaiseHand\Client\RaiseHand.Client.csproj", "{DA9870E0-1337-4669-9135-FB70C85534EC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RaiseHand.Shared", "RaiseHand\Shared\RaiseHand.Shared.csproj", "{B8FA3306-0AB5-4FEB-A2B3-0A52424D9D77}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RaiseHand.Shared", "RaiseHand\Shared\RaiseHand.Shared.csproj", "{B8FA3306-0AB5-4FEB-A2B3-0A52424D9D77}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

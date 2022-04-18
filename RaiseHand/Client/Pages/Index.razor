@@ -2,43 +2,71 @@
 @inject NavigationManager NavigationManager
 @implements IAsyncDisposable
 
-<PageTitle>SignalR Chat</PageTitle>
-<h3>SignalR Chat</h3>
+<PageTitle>Riase Hand</PageTitle>
 
-@if (!IsConnected)
-{
-    <div class="input-group">
-        <input @bind="username" class="form-control" placeholder="What's your name?" />
-        <button class="btn btn-primary form-control-append" @onclick="Connect">
-            Connect
-        </button>
-    </div>
-}
-else
-{
-    <textarea style="width:100%; height:500px;">
-        @messages
-    </textarea>
-    <div class="input-group">
-        <input @bind-value="message" @bind-value:event="oninput" @onkeyup="HandleInput" class='form-control' />
-        <button class="btn btn-primary form-group-append" @onclick="Send" disabled="@(!IsConnected)">Send</button>
-    </div>
-}
+<div class="vh-100" style="background-color:pink;">
 
+        <h3>Raise Hand</h3>
+
+        @if (!IsConnected)
+        {
+            <main class="flex-shrink-0">
+                <div class="container">
+                    <div class="row">
+                        <div class="input-group">
+                            <input @bind="_username" class="form-control" placeholder="What's your name?" @onkeyup="HandleInput" />
+                            <button class="btn btn-primary form-control-append" @onclick="Connect">Connect</button>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        }
+        else
+        {
+            <main class="flex-shrink-0">
+                <div class="container">
+                    @foreach(KeyValuePair<string, bool> hand in _hands)
+                    {
+                        <div class="row" style="height:50px;">
+                            <div class="col-4">
+                                @hand.Key
+                            </div>
+                            <div class="col-4">
+                                @if (hand.Value)
+                                {
+                                    <img src="/assets/hand.svg" width="50px" height="50px" />
+                                }
+                            </div>
+                        </div>
+                    }
+                </div>
+            </main>
+
+            <footer class="footer mt-auto py-3 bg-light">
+                <div class="container">
+                    <div class="row justify-content-end">
+                        <div class="col-4">
+                            <input class="btn-check" type="checkbox" id="checkBoxHand" @onclick="Send" checked="@_hand" disabled="@(!IsConnected)" />
+                            <label class="btn btn-outline-info" for="checkBoxHand"> @(_hand?"Lower":"Riase") Hand</label>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        }
+</div>
 @code {
     private HubConnection? _hubConnection;
-    private Dictionary<string,bool> _hands = new Dictionary<string, bool>();
+    private SortedDictionary<string, bool> _hands = new SortedDictionary<string, bool>();
     private string _username = string.Empty;
     private bool _hand = false;
 
     private async Task Connect()
     {
-        _hubConnection = new HubConnectionBuilder().WithUrl(NavigationManager.ToAbsoluteUri("/raisehandhub?username={username}")).Build();
+        _hubConnection = new HubConnectionBuilder().WithUrl(NavigationManager.ToAbsoluteUri($"/raisehandhub?username={_username}")).Build();
 
-        _hubConnection.On<string, bool>("ReceiveMessage", (user, hand) =>
+        _hubConnection.On<string, bool>("ReceiveHand", (user, hand) =>
         {
-            //var msg = $"{(string.IsNullOrEmpty(user) ? "" : user + ": ")} {message}";
-            _hands.Add(user, hand);
+            _hands[user] = hand;
             StateHasChanged();
 
         });
@@ -50,16 +78,16 @@ else
     {
         if (_hubConnection != null)
         {
-            await _hubConnection.SendAsync("AddMessageToChat", username, message);
-            message = string.Empty;
+            _hand = !_hand;
+            await _hubConnection.SendAsync("SetHandRaised", _username, _hand);
         }
     }
 
     private async Task HandleInput(KeyboardEventArgs args)
     {
-        if(args.Key.Equals("Enter"))
+        if (args.Key.Equals("Enter"))
         {
-            await Send();
+            await Connect();
         }
     }
 
