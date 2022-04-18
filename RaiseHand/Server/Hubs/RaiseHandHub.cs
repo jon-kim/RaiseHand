@@ -17,13 +17,18 @@ namespace RaiseHand.Server.Hubs
 
         public override async Task OnDisconnectedAsync(Exception? exception)
         {
-
+            string username = _users.FirstOrDefault(u => u.Key == Context.ConnectionId).Value;
+            await RemoveHand(username);
         }
 
         public async Task SetHandRaised(string user, bool raiseHand)
         {
             await Clients.All.SendAsync("ReceiveHand", user, raiseHand);
+        }
 
+        public async Task RemoveHand(string user)
+        {
+            await Clients.All.SendAsync("RemoveHand", user);
         }
     }
 }

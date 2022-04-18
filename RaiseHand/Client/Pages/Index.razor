@@ -4,38 +4,28 @@
 
 <PageTitle>Riase Hand</PageTitle>
 
-<div class="vh-100" style="background-color:pink;">
-
+<div>
         <h3>Raise Hand</h3>
-
+        </div>
         @if (!IsConnected)
         {
-            <main class="flex-shrink-0">
-                <div class="container">
-                    <div class="row">
                         <div class="input-group">
                             <input @bind="_username" class="form-control" placeholder="What's your name?" @onkeyup="HandleInput" />
                             <button class="btn btn-primary form-control-append" @onclick="Connect">Connect</button>
                         </div>
-                    </div>
-                </div>
-            </main>
         }
         else
         {
-            <main class="flex-shrink-0">
+            <main>
                 <div class="container">
                     @foreach(KeyValuePair<string, bool> hand in _hands)
                     {
-                        <div class="row" style="height:50px;">
+                        <div class="row">
                             <div class="col-4">
                                 @hand.Key
                             </div>
                             <div class="col-4">
-                                @if (hand.Value)
-                                {
-                                    <img src="/assets/hand.svg" width="50px" height="50px" />
-                                }
+                                <img src="/assets/hand.svg" width="50px" height="50px" />
                             </div>
                         </div>
                     }
@@ -53,7 +43,6 @@
                 </div>
             </footer>
         }
-</div>
 @code {
     private HubConnection? _hubConnection;
     private SortedDictionary<string, bool> _hands = new SortedDictionary<string, bool>();
@@ -66,9 +55,19 @@
 
         _hubConnection.On<string, bool>("ReceiveHand", (user, hand) =>
         {
-            _hands[user] = hand;
+            if (hand)
+                _hands[user] = hand;
+            else
+                _hands.Remove(user);
+
             StateHasChanged();
 
+        });
+
+        _hubConnection.On<string>("RemoveHand", (user) =>
+        {
+            _hands.Remove(user);
+            StateHasChanged();
         });
 
         await _hubConnection.StartAsync();
