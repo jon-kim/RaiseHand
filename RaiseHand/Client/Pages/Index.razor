@@ -63,6 +63,8 @@ else
 
         _hubConnection.On<string, bool>("ReceiveHand", (user, hand) =>
         {
+            Console.WriteLine("~~~ReceiveHand~~~");
+
             if (hand)
                 _hands[user] = hand;
             else
@@ -75,6 +77,23 @@ else
         _hubConnection.On<string>("RemoveHand", (user) =>
         {
             _hands.Remove(user);
+            StateHasChanged();
+        });
+
+        _hubConnection.On<IEnumerable<UserHand>>("ReceiveAllHands", (userHands) =>
+        {
+            _hands.Clear();
+
+            Console.WriteLine("~~~ReceiveAllHands~~~");
+
+            foreach (UserHand uh in userHands)
+            {
+                _hands[uh.Username] = uh.HandRaised;
+                Console.WriteLine($"{uh.Username}: {uh.HandRaised}");
+            }
+
+            Console.WriteLine("###ReceiveAllHands###");
+
             StateHasChanged();
         });
 
