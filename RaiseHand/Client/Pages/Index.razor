@@ -80,7 +80,7 @@ else
             StateHasChanged();
         });
 
-        _hubConnection.On<IEnumerable<UserHand>>("ReceiveAllHands", (userHands) =>
+        _hubConnection.On<UserHand[]>("ReceiveAllHands", (userHands) =>
         {
             _hands.Clear();
 
