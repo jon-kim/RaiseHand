@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 using RaiseHand.Shared;
+using System.Diagnostics;
 
 namespace RaiseHand.Server.Hubs
 {
@@ -33,7 +34,7 @@ namespace RaiseHand.Server.Hubs
 
         public async Task SendAllHands()
         {
-            await Clients.All.SendAsync("ReceiveAllHands", _connections.Values.ToArray());
+            await Clients.All.SendAsync("ReceiveAllHands", new List<UserHand>() { new UserHand("abc"), new UserHand("123") }/*_connections.Values.ToArray()*/);
         }
 
         public async Task RemoveHand(string user)

@@ -80,21 +80,22 @@ else
             StateHasChanged();
         });
 
-        _hubConnection.On<UserHand[]>("ReceiveAllHands", (userHands) =>
+        //_hubConnection.On<UserHand[]>("ReceiveAllHands", (userHands) =>
+        _hubConnection.On<List<UserHand>>("ReceiveAllHands", (userHands) =>
         {
-            _hands.Clear();
-
             Console.WriteLine("~~~ReceiveAllHands~~~");
 
-            foreach (UserHand uh in userHands)
-            {
-                _hands[uh.Username] = uh.HandRaised;
-                Console.WriteLine($"{uh.Username}: {uh.HandRaised}");
-            }
+        //_hands.Clear();
 
-            Console.WriteLine("###ReceiveAllHands###");
+        //foreach (UserHand uh in userHands)
+        //{
+        //    _hands[uh.Username] = uh.HandRaised;
+        //    Console.WriteLine($"{uh.Username}: {uh.HandRaised}");
+        //}
 
-            StateHasChanged();
+        Console.WriteLine("###ReceiveAllHands###");
+
+        StateHasChanged();
         });
 
         await _hubConnection.StartAsync();

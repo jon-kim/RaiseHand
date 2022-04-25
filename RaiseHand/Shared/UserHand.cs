@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace RaiseHand.Shared
 {
-    public struct UserHand
+    public class UserHand
     {
-        public UserHand() : this(string.Empty, false) { }
+        public UserHand() : this("not assigned", false) { }
         public UserHand(string username) : this(username, false) { }
         public UserHand(string username, bool handRaised)
         {
