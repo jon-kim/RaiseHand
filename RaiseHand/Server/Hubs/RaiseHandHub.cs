@@ -16,25 +16,29 @@ namespace RaiseHand.Server.Hubs
             _connections[Context.ConnectionId] = new UserHand(username);
 
             //await SetHandRaised(username, false);
-            await SendAllHands();
+            await SendAllHands(Context.ConnectionId);
             await base.OnConnectedAsync();
         }
 
         public override async Task OnDisconnectedAsync(Exception? exception)
         {
             //string username = _users.FirstOrDefault(u => u.Key == Context.ConnectionId).Value;
-            string username = _connections.FirstOrDefault(u => u.Key == Context.ConnectionId).Value.Username;
-            await RemoveHand(username);
+            //string username = _connections.FirstOrDefault(u => u.Key == Context.ConnectionId).Value.Username;
+            await RemoveHand(_connections[Context.ConnectionId].Username);
+            _connections.Remove(Context.ConnectionId);
         }
 
         public async Task SetHandRaised(string user, bool raiseHand)
         {
             await Clients.All.SendAsync("ReceiveHand", user, raiseHand);
+            _connections[Context.ConnectionId].HandRaised = raiseHand;
         }
 
-        public async Task SendAllHands()
+        public async Task SendAllHands(string connectionID)
         {
-            await Clients.All.SendAsync("ReceiveAllHands", _connections.Values);
+            foreach (KeyValuePair<string, UserHand> keyValuePair in _connections)
+                if (keyValuePair.Key != connectionID)
+                    await Clients.Client(connectionID).SendAsync("ReceiveHand", keyValuePair.Value.Username, keyValuePair.Value.HandRaised);
         }
 
         public async Task RemoveHand(string user)

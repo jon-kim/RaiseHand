@@ -63,15 +63,17 @@ else
 
         _hubConnection.On<string, bool>("ReceiveHand", (user, hand) =>
         {
-            Console.WriteLine("~~~ReceiveHand~~~");
+            Console.WriteLine("~~~ReceiveHand Start~~~");
 
             if (hand)
                 _hands[user] = hand;
             else
                 _hands.Remove(user);
 
-            StateHasChanged();
+            Console.WriteLine($"{user}:{hand}");
 
+            Console.WriteLine("~~~ReceiveHand End~~~");
+            StateHasChanged();
         });
 
         _hubConnection.On<string>("RemoveHand", (user) =>
