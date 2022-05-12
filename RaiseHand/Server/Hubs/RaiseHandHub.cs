@@ -37,7 +37,7 @@ namespace RaiseHand.Server.Hubs
         public async Task SendAllHands(string connectionID)
         {
             foreach (KeyValuePair<string, UserHand> keyValuePair in _connections)
-                if (keyValuePair.Key != connectionID)
+                if (keyValuePair.Key != connectionID && keyValuePair.Value.HandRaised)
                     await Clients.Client(connectionID).SendAsync("ReceiveHand", keyValuePair.Value.Username, keyValuePair.Value.HandRaised);
         }
 
